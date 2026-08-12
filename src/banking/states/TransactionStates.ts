@@ -3,7 +3,9 @@ import { TransactionStatus } from "./TransactionStatus.ts";
 export interface ITransaction
 {
     setFailureReason(reason: string): void;
+    getFailureReason(): string | undefined;
     setState(state: TransactionState): void;
+    getStatus(): TransactionStatus;
 }
 
 export interface ITransactionStateMachine extends ITransaction
