@@ -1,0 +1,16 @@
+import {
+    IPaymentStrategy
+} from "./IPaymentStrategy.ts";
+import { IAccount } from "../account/IAccount.ts";
+
+export class CashPaymentStrategy implements IPaymentStrategy
+{
+    constructor(private readonly account: IAccount)
+    {
+    }
+
+    pay(amount: number): void
+    {
+        this.account.spend(amount);
+    }
+}
