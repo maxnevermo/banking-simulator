@@ -93,6 +93,7 @@ export class SucceededTransactionState extends TransactionState
         super(TransactionStatus.SUCCESS);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setNextState(_transaction: ITransaction): void
     {
     }
@@ -105,6 +106,7 @@ export class FailedTransactionState extends TransactionState
         super(TransactionStatus.FAILED);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setNextState(_transaction: ITransaction): void
     {
     }
