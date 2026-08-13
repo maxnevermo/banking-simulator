@@ -1,3 +1,10 @@
+@font-face {
+    font-family: "VPPixel";
+    src: url("fonts/VPPixel.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     margin: 0;
     padding: 0;
