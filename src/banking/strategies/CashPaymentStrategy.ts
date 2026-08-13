@@ -5,7 +5,7 @@ import { IAccount } from "../account/IAccount.ts";
 
 export class CashPaymentStrategy implements IPaymentStrategy
 {
-    constructor(private readonly account: IAccount)
+    constructor(readonly account: IAccount)
     {
     }
 

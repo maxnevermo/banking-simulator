@@ -4,7 +4,6 @@ import { WithdrawCommand } from "../commands/WithdrawCommand.ts";
 import {
     ITransactionContext
 } from "../handlers/ITransactionContext.ts";
-import { IAccount } from "../account/IAccount.ts";
 import {
     ITransactionHandler
 } from "../handlers/ITransactionHandler.ts";
@@ -27,7 +26,6 @@ import {
 export class TerminalFacade
 {
     constructor(
-        private readonly account: IAccount,
         private readonly handlers: ITransactionHandler,
         private readonly observer: ITransactionObserver)
     {
@@ -40,7 +38,7 @@ export class TerminalFacade
             return this.createFailedTransaction("Withdraw operation is only available for card option");
         }
 
-        return this.runCommand(new WithdrawCommand(strategy, amount), amount);
+        return this.runCommand(new WithdrawCommand(strategy, amount), amount, strategy);
     }
 
     async topUp(amount: number, strategy: IPaymentStrategy): Promise<Transaction>
@@ -50,17 +48,17 @@ export class TerminalFacade
             return this.createFailedTransaction("Top up operation is only available for card option");
         }
 
-        return this.runCommand(new TopUpCommand(strategy, amount), amount);
+        return this.runCommand(new TopUpCommand(strategy, amount), amount, strategy);
     }
 
     async payLoan(amount: number, strategy: IPaymentStrategy): Promise<Transaction>
     {
-        return this.runCommand(new PayLoanCommand(strategy, amount), amount);
+        return this.runCommand(new PayLoanCommand(strategy, amount), amount, strategy);
     }
 
     async payUtilities(amount: number, strategy: IPaymentStrategy): Promise<Transaction>
     {
-        return this.runCommand(new PayUtilitiesCommand(strategy, amount), amount);
+        return this.runCommand(new PayUtilitiesCommand(strategy, amount), amount, strategy);
     }
 
     private async executeTransaction(transaction: Transaction, command: Command, context: ITransactionContext): Promise<Transaction>
@@ -84,7 +82,7 @@ export class TerminalFacade
         return transaction;
     }
 
-    private async runCommand(command: Command, amount: number): Promise<Transaction>
+    private async runCommand(command: Command, amount: number, strategy: IPaymentStrategy): Promise<Transaction>
     {
         const transaction = new Transaction();
 
@@ -92,7 +90,7 @@ export class TerminalFacade
             transaction,
             amount,
             operationType: command.getOperationType(),
-            sourceAccount: this.account
+            sourceAccount: strategy.account
         };
 
         return this.executeTransaction(transaction, command, transactionContext);

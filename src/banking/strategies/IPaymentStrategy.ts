@@ -1,5 +1,9 @@
+import { IAccount } from "../account/IAccount.ts";
+
 export interface IPaymentStrategy
 {
+    readonly account: IAccount;
+
     pay(amount: number): void;
 }
 
