@@ -19,17 +19,21 @@ import {
 import {
     CardPaymentStrategy
 } from "../strategies/CardPaymentStrategy.ts";
+import {
+    ITransactionObserver
+} from "../notifiers/TransactionObserver.ts";
 
 
 export class TerminalFacade
 {
     constructor(
         private readonly account: IAccount,
-        private readonly handlers: ITransactionHandler)
+        private readonly handlers: ITransactionHandler,
+        private readonly observer: ITransactionObserver)
     {
     }
 
-    public withdraw(amount: number, strategy: IPaymentStrategy): Transaction
+    async withdraw(amount: number, strategy: IPaymentStrategy): Promise<Transaction>
     {
         if (!(strategy instanceof CardPaymentStrategy))
         {
@@ -39,7 +43,7 @@ export class TerminalFacade
         return this.runCommand(new WithdrawCommand(strategy, amount), amount);
     }
 
-    public topUp(amount: number, strategy: IPaymentStrategy): Transaction
+    async topUp(amount: number, strategy: IPaymentStrategy): Promise<Transaction>
     {
         if (!(strategy instanceof CardPaymentStrategy))
         {
@@ -49,17 +53,17 @@ export class TerminalFacade
         return this.runCommand(new TopUpCommand(strategy, amount), amount);
     }
 
-    public payLoan(amount: number, strategy: IPaymentStrategy): Transaction
+    async payLoan(amount: number, strategy: IPaymentStrategy): Promise<Transaction>
     {
         return this.runCommand(new PayLoanCommand(strategy, amount), amount);
     }
 
-    public payUtilities(amount: number, strategy: IPaymentStrategy): Transaction
+    async payUtilities(amount: number, strategy: IPaymentStrategy): Promise<Transaction>
     {
         return this.runCommand(new PayUtilitiesCommand(strategy, amount), amount);
     }
 
-    private executeTransaction(transaction: Transaction, command: Command, context: ITransactionContext): Transaction
+    private async executeTransaction(transaction: Transaction, command: Command, context: ITransactionContext): Promise<Transaction>
     {
         transaction.moveNext();
 
@@ -75,10 +79,12 @@ export class TerminalFacade
         command.execute();
         transaction.moveNext();
 
+        await this.observer.notifyAll(transaction);
+
         return transaction;
     }
 
-    private runCommand(command: Command, amount: number): Transaction
+    private async runCommand(command: Command, amount: number): Promise<Transaction>
     {
         const transaction = new Transaction();
 
