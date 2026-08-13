@@ -4,6 +4,9 @@ import { SceneType } from "./SceneType.ts";
 import { MainMenuScene } from "./main-menu/MainMenuScene.ts";
 import { GameScene } from "./game/GameScene.ts";
 import { Application } from "pixi.js";
+import {
+    BankingGameServiceFactory
+} from "../services/banking-service/BankingGameServiceFactory.ts";
 
 export class SceneManager implements SceneNavigator
 {
@@ -35,7 +38,7 @@ export class SceneManager implements SceneNavigator
             case SceneType.MAIN_MENU:
                 return new MainMenuScene(this.app, this);
             case SceneType.GAME:
-                return new GameScene(this.app);
+                return new GameScene(this.app, BankingGameServiceFactory.create());
         }
     }
 }
