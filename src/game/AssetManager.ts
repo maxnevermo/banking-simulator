@@ -11,7 +11,7 @@ type GameTextures = {
 
 export class AssetManager
 {
-    static async loadMainMenuAssets(): Promise<MainMenuTextures>
+    public static async loadMainMenuAssets(): Promise<MainMenuTextures>
     {
         const fetchedAssets = await Assets.load([
             {
@@ -25,7 +25,7 @@ export class AssetManager
         };
     }
 
-    static async loadGameAssets(): Promise<GameTextures>
+    public static async loadGameAssets(): Promise<GameTextures>
     {
         const fetchedAssets = await Assets.load([
             {
@@ -44,7 +44,7 @@ export class AssetManager
         };
     }
 
-    static async loadFont(): Promise<void>
+    public static async loadFont(): Promise<void>
     {
         await document.fonts.load("16px VPPixel");
         await document.fonts.ready;

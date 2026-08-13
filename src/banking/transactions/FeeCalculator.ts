@@ -6,7 +6,7 @@ const MINIMUM_FEE = 5;
 
 export class FeeCalculator
 {
-    static calculateFor(account: IAccount, amount: number): number
+    public static calculateFor(account: IAccount, amount: number): number
     {
         if (account.type !== AccountType.CARD)
         {

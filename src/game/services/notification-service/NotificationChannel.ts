@@ -1,0 +1,1 @@
+export type NotificationChannel = "file" | "email" | "console";

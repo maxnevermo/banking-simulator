@@ -6,7 +6,7 @@ import { ITransaction } from "../states/TransactionStates.ts";
 
 export class FileNotifier implements INotifier
 {
-    async notify(transaction: ITransaction)
+    public async notify(transaction: ITransaction)
     {
         await fetch("http://localhost:5000/save-to-file", {
             method: "POST",

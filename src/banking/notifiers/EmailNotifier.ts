@@ -10,7 +10,7 @@ export class EmailNotifier implements INotifier
     {
     }
 
-    async notify(transaction: ITransaction)
+    public async notify(transaction: ITransaction)
     {
         await fetch("http://localhost:5000/send-email", {
             method: "POST",
