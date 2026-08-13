@@ -1,14 +1,10 @@
 import { MAIN_MENU_LAYOUT } from "./MainMenuConfig.ts";
 import { Text } from "pixi.js";
+import { ScreenSize } from "../../../utils/ScreenSize.ts";
 
 type MainMenuLayoutComponents = {
     title: Text;
     button: Text;
-};
-
-type ScreenSize = {
-    width: number;
-    height: number;
 };
 
 export function layout(components: MainMenuLayoutComponents, screen: ScreenSize)
