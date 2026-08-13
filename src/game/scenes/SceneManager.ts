@@ -1,8 +1,8 @@
 import { SceneNavigator } from "./SceneNavigator.ts";
 import { Scene } from "./Scene.ts";
 import { SceneType } from "./SceneType.ts";
-import { MainMenuScene } from "./MainMenuScene.ts";
-import { GameScene } from "./GameScene.ts";
+import { MainMenuScene } from "./main-menu/MainMenuScene.ts";
+import { GameScene } from "./game/GameScene.ts";
 import { Application } from "pixi.js";
 
 export class SceneManager implements SceneNavigator
@@ -13,7 +13,7 @@ export class SceneManager implements SceneNavigator
     {
     }
 
-    async goTo(scene: SceneType): Promise<void>
+    public async goTo(scene: SceneType): Promise<void>
     {
         if (this.currentScene)
         {
@@ -28,12 +28,12 @@ export class SceneManager implements SceneNavigator
         this.app.stage.addChild(newScene);
     }
 
-    createScene(scene: SceneType): Scene
+    private createScene(scene: SceneType): Scene
     {
         switch (scene)
         {
             case SceneType.MAIN_MENU:
-                return new MainMenuScene(this.app);
+                return new MainMenuScene(this.app, this);
             case SceneType.GAME:
                 return new GameScene(this.app);
         }

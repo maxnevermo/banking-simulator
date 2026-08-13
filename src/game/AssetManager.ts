@@ -15,13 +15,13 @@ export class AssetManager
     {
         const fetchedAssets = await Assets.load([
             {
-                alias: "background",
+                alias: "menu_background",
                 src: "assets/backgrounds/main_menu.png"
             }
         ]);
 
         return {
-            background: fetchedAssets.background
+            background: fetchedAssets.menu_background
         };
     }
 
@@ -29,7 +29,7 @@ export class AssetManager
     {
         const fetchedAssets = await Assets.load([
             {
-                alias: "background",
+                alias: "game_background",
                 src: "assets/backgrounds/game.png"
             },
             {
@@ -39,7 +39,7 @@ export class AssetManager
         ]);
 
         return {
-            background: fetchedAssets.background,
+            background: fetchedAssets.game_background,
             button: fetchedAssets.button
         };
     }

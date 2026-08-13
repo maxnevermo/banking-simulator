@@ -12,6 +12,10 @@ import { AssetManager } from "./game/AssetManager.ts";
         resizeTo: window
     });
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    globalThis.__PIXI_APP__ = app;
+
     await AssetManager.loadFont();
 
     document.getElementById("pixi-container")!.appendChild(app.canvas);
