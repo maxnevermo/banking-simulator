@@ -6,12 +6,19 @@ import { ITransaction } from "../states/TransactionStates.ts";
 
 export class EmailNotifier implements INotifier
 {
+    constructor(private readonly email: string)
+    {
+    }
+
     async notify(transaction: ITransaction)
     {
-        await fetch("https://localhost:5000/send-email", {
+        await fetch("http://localhost:5000/send-email", {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({
-                email: "maksym.sakh@gmail.com",
+                receiver: this.email,
                 message: generateTransactionCompletedMessage(transaction)
             })
         });

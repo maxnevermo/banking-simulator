@@ -8,8 +8,11 @@ export class FileNotifier implements INotifier
 {
     async notify(transaction: ITransaction)
     {
-        await fetch("https://localhost:5000/save-to-file", {
+        await fetch("http://localhost:5000/save-to-file", {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({
                 message: generateTransactionCompletedMessage(transaction)
             })
