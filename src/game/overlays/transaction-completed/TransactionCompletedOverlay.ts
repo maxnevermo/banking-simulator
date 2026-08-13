@@ -25,10 +25,10 @@ export class TransactionCompletedOverlay extends Container
     constructor(private readonly options: TransactionCompletedOverlayOptions)
     {
         super();
-        this.createView();
+        this.init();
     }
 
-    private createView(): void
+    private init(): void
     {
         const background = new Graphics()
             .rect(0, 0, this.options.screen.width, this.options.screen.height)
