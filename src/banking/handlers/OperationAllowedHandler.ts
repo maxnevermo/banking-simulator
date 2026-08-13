@@ -10,7 +10,7 @@ export class OperationAllowedHandler extends TransactionHandler
     {
 
         const isWithdrawOperationIncorrect = context.operationType === OperationType.WITHDRAW && context.sourceAccount?.type === AccountType.CASH;
-        const isTopUpOperationIncorrect = context.operationType === OperationType.TOP_UP && context.sourceAccount?.type === AccountType.CASH;
+        const isTopUpOperationIncorrect = context.operationType === OperationType.TOP_UP && context.sourceAccount?.type === AccountType.CARD;
 
         if (isWithdrawOperationIncorrect || isTopUpOperationIncorrect)
         {

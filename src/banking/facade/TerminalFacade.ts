@@ -15,39 +15,22 @@ import { PayLoanCommand } from "../commands/PayLoanCommand.ts";
 import {
     PayUtilitiesCommand
 } from "../commands/PayUtilitiesCommand.ts";
-import {
-    CardPaymentStrategy
-} from "../strategies/CardPaymentStrategy.ts";
-import {
-    ITransactionObserver
-} from "../notifiers/TransactionObserver.ts";
 
 
 export class TerminalFacade
 {
     constructor(
-        private readonly handlers: ITransactionHandler,
-        private readonly observer: ITransactionObserver)
+        private readonly handlers: ITransactionHandler)
     {
     }
 
     async withdraw(amount: number, strategy: IPaymentStrategy): Promise<Transaction>
     {
-        if (!(strategy instanceof CardPaymentStrategy))
-        {
-            return this.createFailedTransaction("Withdraw operation is only available for card option");
-        }
-
         return this.runCommand(new WithdrawCommand(strategy, amount), amount, strategy);
     }
 
     async topUp(amount: number, strategy: IPaymentStrategy): Promise<Transaction>
     {
-        if (!(strategy instanceof CardPaymentStrategy))
-        {
-            return this.createFailedTransaction("Top up operation is only available for card option");
-        }
-
         return this.runCommand(new TopUpCommand(strategy, amount), amount, strategy);
     }
 
@@ -74,10 +57,20 @@ export class TerminalFacade
             return transaction;
         }
 
-        command.execute();
-        transaction.moveNext();
+        try
+        {
+            command.execute();
+            transaction.moveNext();
+        } catch (error)
+        {
+            transaction.fail(
+                error instanceof Error
+                    ? error.message
+                    : "Unknown transaction error"
+            );
 
-        await this.observer.notifyAll(transaction);
+            return transaction;
+        }
 
         return transaction;
     }
@@ -94,13 +87,5 @@ export class TerminalFacade
         };
 
         return this.executeTransaction(transaction, command, transactionContext);
-    }
-
-    private createFailedTransaction(reason: string): Transaction
-    {
-        const transaction = new Transaction();
-        transaction.fail(reason);
-
-        return transaction;
     }
 }

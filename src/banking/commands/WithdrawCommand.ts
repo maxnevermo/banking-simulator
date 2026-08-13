@@ -1,22 +1,21 @@
 import { Command } from "./Command.ts";
 import {
-    IPaymentRefillableStrategy
+    IPaymentStrategy
 } from "../strategies/IPaymentStrategy.ts";
 import { OperationType } from "../transactions/OperationType.ts";
 
 export class WithdrawCommand extends Command
 {
     constructor(
-        private readonly strategy: IPaymentRefillableStrategy,
+        private readonly strategy: IPaymentStrategy,
         private readonly amount: number
     )
     {
         super(OperationType.WITHDRAW);
     }
 
-    execute(): void
+    public execute(): void
     {
-        this.strategy.withdraw(this.amount);
+        this.strategy.pay(this.amount);
     }
-
 }

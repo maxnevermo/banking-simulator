@@ -6,14 +6,14 @@ export abstract class TransactionHandler implements ITransactionHandler
 {
     private nextHandler?: ITransactionHandler | null = null;
 
-    setNext(handler: ITransactionHandler)
+    public setNext(handler: ITransactionHandler)
     {
         this.nextHandler = handler;
 
         return handler;
     }
 
-    handle(context: ITransactionContext): HandlerResult
+    public handle(context: ITransactionContext): HandlerResult
     {
         const result = this.handleCurrent(context);
 
