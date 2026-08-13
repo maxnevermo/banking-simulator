@@ -1,11 +1,26 @@
-import { Scene } from "../Scene.ts";
 import { Application } from "pixi.js";
+import { Scene } from "../Scene.ts";
 import { AssetManager } from "../../AssetManager.ts";
 import { GameSceneView } from "./GameSceneView.ts";
+import {
+    BankingGameService
+} from "../../services/banking-service/BankingGameService.ts";
+import {
+    TransactionNotificationService
+} from "../../services/notification-service/TransactionNotificationService.ts";
+import {
+    GameFlowController
+} from "./GameFlowController.ts";
 
 export class GameScene extends Scene
 {
-    constructor(private readonly app: Application)
+    private gameView!: GameSceneView;
+    private transactionFlow!: GameFlowController;
+
+    constructor(
+        private readonly app: Application,
+        private readonly bankingService: BankingGameService
+    )
     {
         super();
     }
@@ -14,16 +29,25 @@ export class GameScene extends Scene
     {
         const gameTextures = await AssetManager.loadGameAssets();
 
-        const view = new GameSceneView({
+        this.gameView = new GameSceneView({
             screen: this.app.screen,
             backgroundTexture: gameTextures.background,
             buttonTexture: gameTextures.button,
-            onOptionClick: (buttonId: string) =>
+            userBalances: this.bankingService.getUserBalances(),
+            onOptionClick: (operation) =>
             {
-                //TODO: IMPLEMENT OPTION CLICK
+                this.transactionFlow.openAccountChoiceOverlay(operation);
             }
         });
 
-        this.addChild(view);
+        this.transactionFlow = new GameFlowController({
+            screen: this.app.screen,
+            overlayParent: this,
+            bankingService: this.bankingService,
+            gameView: this.gameView,
+            notificationService: new TransactionNotificationService()
+        });
+
+        this.addChild(this.gameView);
     }
 }
