@@ -2,6 +2,7 @@ import {
     IPaymentRefillableStrategy
 } from "./IPaymentStrategy.ts";
 import { IAccount } from "../account/IAccount.ts";
+import { FeeCalculator } from "../transactions/FeeCalculator.ts";
 
 export class CardPaymentStrategy implements IPaymentRefillableStrategy
 {
@@ -11,7 +12,7 @@ export class CardPaymentStrategy implements IPaymentRefillableStrategy
 
     pay(amount: number)
     {
-        this.account.spend(amount);
+        this.account.spend(amount + FeeCalculator.calculateFor(this.account, amount));
     }
 
     topUp(amount: number)
@@ -21,6 +22,6 @@ export class CardPaymentStrategy implements IPaymentRefillableStrategy
 
     withdraw(amount: number)
     {
-        this.account.spend(amount);
+        this.account.spend(amount + FeeCalculator.calculateFor(this.account, amount));
     }
 }

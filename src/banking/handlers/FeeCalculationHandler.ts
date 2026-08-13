@@ -1,21 +1,15 @@
 import { TransactionHandler } from "./TransactionHandler.ts";
 import { ITransactionContext } from "./ITransactionContext.ts";
 import { HandlerResult } from "./HandleResult.ts";
-import { AccountType } from "../account/AccountType.ts";
-
-const FEE_SHARE = 0.01;
-const MIN_FEE = 5;
+import { FeeCalculator } from "../transactions/FeeCalculator.ts";
 
 export class FeeCalculationHandler extends TransactionHandler
 {
     protected handleCurrent(context: ITransactionContext): HandlerResult
     {
-        context.fee = 0;
-
-        if (context.sourceAccount?.type === AccountType.CARD)
-        {
-            context.fee = context.amount * FEE_SHARE + MIN_FEE;
-        }
+        context.fee = context.sourceAccount
+            ? FeeCalculator.calculateFor(context.sourceAccount, context.amount)
+            : 0;
 
         return HandlerResult.success();
     }
